@@ -1,0 +1,119 @@
+//encuentra el tamaño del sub string mas largo consecutivo sin repetir caracteres
+
+// Yo uso el método de la violencia, un total de dos ciclos, pero el método de la violencia realmente no es suficiente, la complejidad del tiempo es muy alta, por lo que debemos hacer una optimización
+    public static int lengthOfLongestSubstring(String s) {
+        int num = 0;
+        for(int i = 0;i<s.length();i++){
+            Map<String, Integer> map = new HashMap<>();
+            for(int j = i;j<s.length();j++) {// Tenga en cuenta j = i;
+                String str = String.valueOf(s.charAt(j));
+                if (map.containsKey(str)) {// Si el personaje está en la tabla hash, salta del bucle actual
+                    break;// Siempre que haya valores repetidos, finalice el bucle interno e ingrese al siguiente bucle de la capa externa
+                }
+                else {
+                    map.put(str, j);// Cuando encuentre una cadena que no se repita, colóquela en la tabla hash, y siempre habrá una cadena que no se repita en la tabla hash
+                    if(num<map.size()){// Asegúrese de que la cadena única interceptada sea siempre la más grande
+                        num = map.size();
+                    }
+                }
+            }
+            if(map.size()==s.length()){num = s.length();// Juzga si todas las cadenas son diferentes
+            break;// Si la cadena dada no se repite, terminará después de un bucle
+            }
+        }
+        return num;
+    }
+// otro metodo
+import java.util.HashSet;
+import java.util.Scanner;
+
+public class Main {
+
+    /**
+     * Obtenga la subcadena no repetitiva más larga (la idea de una ventana deslizante)
+     * @param str
+     * @return
+     */
+   public static int getLongestStr(String str){
+       if(str==null||str.length()==0)
+         return 0;
+       int len=str.length();
+       HashSet<Character>set=new HashSet<>();
+       int res=0,i=0,j=0;
+       String temp="";
+       while(i<len&&j<len){
+           if(!set.contains(str.charAt(j))){
+
+               set.add(str.charAt(j++));
+              // res=Math.max(res, j-i);
+               if(j-i>res){
+                   res=j-i;
+                   temp=str.substring(i,j);
+               }
+
+           }else{
+               set.remove(str.charAt(i++));
+           }   
+       }
+       System.out.println(temp);
+       return res;
+   }
+
+   public static void main(String[] args) {
+     Scanner sin=new Scanner(System.in);
+
+     while(sin.hasNext()){
+
+          String str=sin.nextLine();
+
+          System.out.println(getLongestStr(str));
+
+     }
+
+  }
+}
+//otra
+
+// Encuentra la subcadena de caracteres no repetidos más larga de la cadena
+public class MaxUniqueString{
+	 
+	  // Encuentra la longitud de la subcadena más larga sin caracteres repetidos
+	public static int GetMaxUniqueString(String str)
+	{
+         if(str==null||str.length()==0)
+         {
+         	return 0;
+         } 
+                   // Matriz de dimensiones de conversión de cadenas
+         char[]chas=str.toCharArray();
+                   // Tabla de mapeo de ubicación de cadenas
+         int[]map=new int[256];
+         for(int i=0;i<256;i++)
+         {
+         	map[i]=-1;
+         }
+         int pre=-1;
+         int maxlen=0; 
+         int cur=0;
+         for(int i=0;i<chas.length;i++)
+         {
+         	pre=Math.max(pre,map[chas[i]]);
+         	          cur = i-pre; // La longitud más larga de la posición actual
+         	maxlen=Math.max(maxlen,cur);
+         	          map [chas [i]] = i; // Registrar la posición de la cadena de caracteres atravesada
+         }
+  
+         return maxlen;
+ 
+	}
+	 public static void main(String[]args)
+	 {
+	 	//System.out.println("Hello");
+	 	String str01="abcd";
+	 	String str02="aabcb";
+	 	String str03="";
+	 	System.out.println(GetMaxUniqueString(str01));
+	 	System.out.println(GetMaxUniqueString(str02));
+	 	System.out.println(GetMaxUniqueString(str03));
+ 
+	 }
